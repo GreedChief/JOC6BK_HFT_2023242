@@ -5,6 +5,8 @@ VisualStudioVersion = 17.9.34728.123
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JOC6BK_HFT_2023242.Client", "JOC6BK_HFT_2023242.Client\JOC6BK_HFT_2023242.Client.csproj", "{8BFEFCC7-6057-44FD-AA1C-C18232A30F6F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JOC6BK_HFT_2023242.Models", "JOC6BK_HFT_2023242.Models\JOC6BK_HFT_2023242.Models.csproj", "{F64A2BF8-20B5-4F70-A06D-10A4BEF9D439}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{8BFEFCC7-6057-44FD-AA1C-C18232A30F6F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8BFEFCC7-6057-44FD-AA1C-C18232A30F6F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8BFEFCC7-6057-44FD-AA1C-C18232A30F6F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F64A2BF8-20B5-4F70-A06D-10A4BEF9D439}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F64A2BF8-20B5-4F70-A06D-10A4BEF9D439}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F64A2BF8-20B5-4F70-A06D-10A4BEF9D439}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F64A2BF8-20B5-4F70-A06D-10A4BEF9D439}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
