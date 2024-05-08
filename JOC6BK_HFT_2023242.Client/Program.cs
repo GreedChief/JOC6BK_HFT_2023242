@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Linq;
 using JOC6BK_HFT_2023242.Models;
+using JOC6BK_HFT_2023242.Repository;
 
 namespace JOC6BK_HFT_2023242.Client
 {
@@ -8,6 +10,8 @@ namespace JOC6BK_HFT_2023242.Client
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
+            GameDbContext ctx = new GameDbContext();
+            var items = ctx.Games.ToArray();
         }
     }
 }
