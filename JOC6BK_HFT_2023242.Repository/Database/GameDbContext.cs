@@ -21,8 +21,7 @@ namespace JOC6BK_HFT_2023242.Repository
         protected override void OnConfiguring(DbContextOptionsBuilder builder) 
         { 
             if(!builder.IsConfigured) {
-                string conn = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=C:\Users\adamm\Desktop\JOC6BK_HFT_2023242\JOC6BK_HFT_2023242.Repository\game.mdf;Integrated Security=True";
-                builder.UseLazyLoadingProxies().UseSqlServer(conn);
+                builder.UseLazyLoadingProxies().UseInMemoryDatabase("game");
             }
         }
         protected override void OnModelCreating(ModelBuilder modelBuilder)
