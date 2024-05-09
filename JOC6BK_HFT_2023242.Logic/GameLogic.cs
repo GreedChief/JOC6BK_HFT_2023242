@@ -49,7 +49,7 @@ namespace JOC6BK_HFT_2023242.Logic
             this.repo.Update(item);
         }
 
-        //Non Cruds
+        //Non Cruds (min5db)
         public double? GetAverageRatePerMonth(int year) {
             return this.repo.ReadAll().Where(t => t.Release.Year == year)
                 .Average(t => t.Rating);
