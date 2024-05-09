@@ -10,8 +10,8 @@ namespace JOC6BK_HFT_2023242.Client
         static void Main(string[] args)
         {
             Console.WriteLine("Hello World!");
-            GameDbContext ctx = new GameDbContext();
-            var items = ctx.Games.ToArray();
+            IRepository<Player> repo = new PlayerRepository(new GameDbContext());
+            var items = repo.ReadAll().ToArray();
         }
     }
 }
