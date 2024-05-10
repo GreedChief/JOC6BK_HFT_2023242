@@ -1,4 +1,5 @@
-﻿using System;
+﻿using JOC6BK_HFT_2023242.Models;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -28,6 +29,5 @@ namespace JOC6BK_HFT_2023242.Repository
         }
         public abstract T Read(int id);
         public abstract void Update(T item);
-
     }
 }

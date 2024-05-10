@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using JOC6BK_HFT_2023242.Models;
 using JOC6BK_HFT_2023242.Repository;
+using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
 namespace JOC6BK_HFT_2023242.Logic
 {
@@ -51,7 +52,7 @@ namespace JOC6BK_HFT_2023242.Logic
         }
 
         //Non Cruds (min5)
-        public double? GetAverageRatePerMonth(int year)
+        public double? GetAverageRatePerYear(int year)
         {
             return this.repo.ReadAll().Where(t => t.Release.Year == year)
                 .Average(t => t.Rating);
@@ -67,12 +68,48 @@ namespace JOC6BK_HFT_2023242.Logic
                        GameNumber = g.Count()
                    };
         }
+
+        public IEnumerable<GameDetail> GetGamesByDeveloper(int developerId)
+        {
+                return this.repo.ReadAll()
+                          .Where(b => b.DeveloperId == developerId)
+                          .Select(b => new GameDetail
+                          {
+                              GameId = b.GameId,
+                              Title = b.Title,
+                              Release = b.Release
+                          });            
+        }
+        public IEnumerable<GameDetail> GetGamesByRelease(DateTime releaseDate)
+        {
+            return this.repo.ReadAll()
+                .Where(game => game.Release.Date == releaseDate.Date)
+                .Select(game => new GameDetail
+                {
+                    GameId = game.GameId,
+                    Title = game.Title,
+                    Release = game.Release
+                });
+        }
+        public double? GetHighestRating()
+        {
+            return this.repo.ReadAll()
+                .Max(t => (double?)t.Rating);
+        }
+
+
         public class YearInfo
         {
             public int Year { get; set; }
             public double? AvgRating { get; set; }
             public int GameNumber { get; set; }
             public int RoleNumber { get; set; }
+        }
+        public class GameDetail 
+        { 
+            public int GameId { get; set; }
+            public string Title { get; set; }
+            public DateTime Release { get; set; }
         }
     }
 
