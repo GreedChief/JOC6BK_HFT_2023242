@@ -97,6 +97,10 @@ namespace JOC6BK_HFT_2023242.Logic
                 .Max(t => (double?)t.Rating);
         }
 
+        public void Create(Role newRole)
+        {
+            throw new NotImplementedException();
+        }
 
         public class YearInfo
         {

@@ -19,7 +19,12 @@ namespace JOC6BK_HFT_2023242.Logic
 
         public void Create(Role item)
         {
-            this.repo.Create(item);
+            var existingRole = repo.ReadAll().FirstOrDefault(r => r.RoleName == item.RoleName);
+            if (existingRole != null)
+            {
+                throw new ArgumentException("The name of the role is already in the database");
+            }
+            repo.Create(item);
         }
 
         public void Delete(int id)
