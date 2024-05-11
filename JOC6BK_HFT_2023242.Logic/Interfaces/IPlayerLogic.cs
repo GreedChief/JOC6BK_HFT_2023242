@@ -1,4 +1,5 @@
 ﻿using JOC6BK_HFT_2023242.Models;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace JOC6BK_HFT_2023242.Logic
@@ -10,5 +11,6 @@ namespace JOC6BK_HFT_2023242.Logic
         Player Read(int id);
         IQueryable<Player> ReadAll();
         void Update(Player item);
+        IEnumerable<PlayerLogic.PlayerInfo> GetPlayerById(int id);
     }
 }

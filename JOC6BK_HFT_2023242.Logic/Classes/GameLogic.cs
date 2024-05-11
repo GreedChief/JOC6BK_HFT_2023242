@@ -51,7 +51,7 @@ namespace JOC6BK_HFT_2023242.Logic
             this.repo.Update(item);
         }
 
-        //Non Cruds (min5)
+        //Non Cruds (min5, több táblás lekérdezést kell készíteni)
         public double? GetAverageRatePerYear(int year)
         {
             return this.repo.ReadAll().Where(t => t.Release.Year == year)
@@ -104,6 +104,25 @@ namespace JOC6BK_HFT_2023242.Logic
             public double? AvgRating { get; set; }
             public int GameNumber { get; set; }
             public int RoleNumber { get; set; }
+
+            public override bool Equals(object obj)
+            {
+               YearInfo b = obj as YearInfo;
+                if (b == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return this.Year == b.Year
+                        && this.AvgRating == b.AvgRating
+                        && this.GameNumber == b.GameNumber;
+                }
+            }
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(this.Year, this.AvgRating, this.GameNumber);
+            }
         }
         public class GameDetail 
         { 

@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static JOC6BK_HFT_2023242.Logic.GameLogic;
 
 
 namespace JOC6BK_HFT_2023242.Logic
@@ -42,5 +43,21 @@ namespace JOC6BK_HFT_2023242.Logic
         {
             this.repo.Update(item);
         }
+        public IEnumerable<PlayerInfo> GetPlayerById(int id)
+        {
+            return repo.ReadAll()
+                .Where(game => game.PlayerId == id)
+                .Select(game => new PlayerInfo
+                {
+                    PlayerId = game.PlayerId,
+                    Name = game.PlayerName,
+                });
+        }
+        public class PlayerInfo 
+        { 
+            public int PlayerId { get; set; }
+            public string Name { get; set; }
+        }
+
     }
 }
