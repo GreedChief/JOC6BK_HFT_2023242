@@ -11,6 +11,7 @@ namespace JOC6BK_HFT_2023242.Endpoint.Controllers
     public class StatController : ControllerBase
     {
         IGameLogic logic;
+        IPlayerLogic playerLogic;
 
         public StatController(IGameLogic logic)
         {
@@ -28,14 +29,23 @@ namespace JOC6BK_HFT_2023242.Endpoint.Controllers
         {
             return this.logic.YearStatistics();
         }
+
+        [HttpGet("{developerId}")]
         public IEnumerable<GameLogic.GameDetail> GetGamesByDeveloper(int developerId) 
         { 
             return this.logic.GetGamesByDeveloper(developerId);
         }
 
+        [HttpGet("{releaseDate}")]
         public IEnumerable<GameLogic.GameDetail> GetGamesByRelease(DateTime releaseDate) 
         { 
             return this.logic.GetGamesByRelease(releaseDate);
+        }
+
+        [HttpGet("{id}")]
+        public IEnumerable<PlayerLogic.PlayerInfo> GetPlayerById(int id) 
+        { 
+            return this.playerLogic.GetPlayerById(id);
         }
     }
 }
