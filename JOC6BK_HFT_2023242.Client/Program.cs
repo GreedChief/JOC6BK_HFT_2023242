@@ -192,12 +192,20 @@ namespace JOC6BK_HFT_2023242.Client
                 .Add("Update", () => Update("Game"))
                 .Add("Exit", ConsoleMenu.Close);
 
+            var noncrudsSubMenu = new ConsoleMenu(args, level: 1)
+                .Add("List", () => List("NonCrud"))
+                .Add("Create", () => Create("NonCrud"))
+                .Add("Delete", () => Delete("NonCrud"))
+                .Add("Update", () => Update("NonCrud"))
+                .Add("Exit", ConsoleMenu.Close);
+
 
             var menu = new ConsoleMenu(args, level: 0)
                 .Add("Games", () => gameSubMenu.Show())
                 .Add("Players", () => playerSubMenu.Show())
                 .Add("Roles", () => roleSubMenu.Show())
                 .Add("Developers", () => developerSubMenu.Show())
+                .Add("NonCruds", () => noncrudsSubMenu.Show())
                 .Add("Exit", ConsoleMenu.Close);
 
             menu.Show();
