@@ -19,6 +19,27 @@ namespace JOC6BK_HFT_2023242.Client
                 string name = Console.ReadLine();
                 rest.Post(new Player() { PlayerName = name }, "player");
             }
+
+            if (entity == "Role")
+            {
+                Console.Write("Enter Role Name: ");
+                string roleName = Console.ReadLine();
+                rest.Post(new Role() { RoleName = roleName }, "role");
+            }
+
+            if (entity == "Developer")
+            {
+                Console.Write("Enter Developer Name: ");
+                string developerName = Console.ReadLine();
+                rest.Post(new Developer() { DeveloperName = developerName }, "developer");
+            }
+
+            if (entity == "Game")
+            {
+                Console.Write("Enter Game's Name: ");
+                string gameName = Console.ReadLine();
+                rest.Post(new Game() { Title = gameName }, "game");
+            }
         }
         static void List(string entity)
         {
@@ -30,6 +51,35 @@ namespace JOC6BK_HFT_2023242.Client
                     Console.WriteLine(item.PlayerId + ": " + item.PlayerName);
                 }
             }
+
+            if (entity == "Role")
+            {
+                List<Role> roles = rest.Get<Role>("role");
+                foreach (var item in roles)
+                {
+                    Console.WriteLine(item.RoleId + ": " + item.RoleName);
+                }
+            }
+
+            if (entity == "Developer")
+            {
+                List<Developer> developers = rest.Get<Developer>("developer");
+                foreach (var item in developers)
+                {
+                    Console.WriteLine(item.DeveloperId + ": " + item.DeveloperName);
+                }
+            }
+
+            if (entity == "Game")
+            {
+                List<Game> games = rest.Get<Game>("game");
+                foreach (var item in games)
+                {
+                    Console.WriteLine(item.GameId + ": " + item.Title);
+                }
+            }
+
+
             Console.ReadLine();
         }
         static void Update(string entity)
@@ -39,19 +89,74 @@ namespace JOC6BK_HFT_2023242.Client
                 Console.Write("Enter Player's id to update: ");
                 int id = int.Parse(Console.ReadLine());
                 Player one = rest.Get<Player>(id, "player");
-                Console.Write($"New name [old: {one.PlayerName}]: ");
-                string name = Console.ReadLine();
-                one.PlayerName = name;
+                Console.Write($"New player's name [old: {one.PlayerName}]: ");
+                string playerName = Console.ReadLine();
+                one.PlayerName = playerName;
                 rest.Put(one, "player");
             }
+
+            if (entity == "Role")
+            {
+                Console.Write("Enter Role's id to update: ");
+                int roleId = int.Parse(Console.ReadLine());
+                Role two = rest.Get<Role>(roleId, "role");
+                Console.Write($"New role's name [old: {two.RoleName}]: ");
+                string roleName = Console.ReadLine();
+                two.RoleName = roleName;
+                rest.Put(two, "role");
+            }
+
+            if (entity == "Developer")
+            {
+                Console.Write("Enter Developer's id to update: ");
+                int devId = int.Parse(Console.ReadLine());
+                Developer three = rest.Get<Developer>(devId, "developer");
+                Console.Write($"New developer's name [old: {three.DeveloperName}]: ");
+                string developerName = Console.ReadLine();
+                three.DeveloperName = developerName;
+                rest.Put(three, "developer");
+            }
+
+            if (entity == "Game")
+            {
+                Console.Write("Enter Game's id to update: ");
+                int gameId = int.Parse(Console.ReadLine());
+                Game four = rest.Get<Game>(gameId, "game");
+                Console.Write($"New game's name [old: {four.Title}]: ");
+                string gameName = Console.ReadLine();
+                four.Title = gameName;
+                rest.Put(four, "game");
+            }
+
         }
         static void Delete(string entity)
         {
             if (entity == "Player")
             {
                 Console.Write("Enter Player's id to delete: ");
-                int id = int.Parse(Console.ReadLine());
-                rest.Delete(id, "player");
+                int id1 = int.Parse(Console.ReadLine());
+                rest.Delete(id1, "player");
+            }
+
+            if (entity == "Role")
+            {
+                Console.Write("Enter Role's id to delete: ");
+                int id2 = int.Parse(Console.ReadLine());
+                rest.Delete(id2, "role");
+            }
+
+            if (entity == "Developer")
+            {
+                Console.Write("Enter Developer's id to delete: ");
+                int id3 = int.Parse(Console.ReadLine());
+                rest.Delete(id3, "developer");
+            }
+
+            if (entity == "Game")
+            {
+                Console.Write("Enter Game's id to delete: ");
+                int id4 = int.Parse(Console.ReadLine());
+                rest.Delete(id4, "game");
             }
         }
         static void Main(string[] args)

@@ -35,7 +35,7 @@ namespace JOC6BK_HFT_2023242.Endpoint.Controllers
             this.logic.Create(value);
         }
 
-        [HttpPut("{id}")]
+        [HttpPut]
         public void Update([FromBody] Game value)
         {
             this.logic.Update(value);
