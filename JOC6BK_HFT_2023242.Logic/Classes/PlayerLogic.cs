@@ -57,6 +57,23 @@ namespace JOC6BK_HFT_2023242.Logic
         { 
             public int PlayerId { get; set; }
             public string Name { get; set; }
+            public override bool Equals(object obj)
+            {
+                PlayerInfo b = obj as PlayerInfo;
+                if (b == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return this.PlayerId == b.PlayerId
+                        && this.Name == b.Name;
+                }
+            }
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(this.PlayerId, this.Name);
+            }
         }
 
     }

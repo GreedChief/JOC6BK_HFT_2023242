@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace JOC6BK_HFT_2023242.Models
@@ -21,6 +22,8 @@ namespace JOC6BK_HFT_2023242.Models
         public int PlayerId { get; set; }
 
         public virtual Player Player { get; private set; }
+        
+        [JsonIgnore]
         public virtual Game Game { get; private set; }
 
         public Role()

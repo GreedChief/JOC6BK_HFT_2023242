@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using static JOC6BK_HFT_2023242.Logic.GameLogic;
 
 namespace JOC6BK_HFT_2023242.Logic
 {
@@ -49,10 +50,10 @@ namespace JOC6BK_HFT_2023242.Logic
         public IEnumerable<MostPlayedRoleInfo> GetMostPlayedRole()
         {
             var roleCounts = repo.ReadAll()
-                                .GroupBy(r => r.RoleId)
+                                .GroupBy(r => r.RoleName)
                                 .Select(group => new
                                 {
-                                    RoleId = group.Key,
+                                    RoleName = group.Key,
                                     RoleCount = group.Count()
                                 })
                                 .OrderByDescending(x => x.RoleCount)
@@ -62,7 +63,7 @@ namespace JOC6BK_HFT_2023242.Logic
             var mostMostPlayedRole = roleCounts.Select(roleCount =>
                 new MostPlayedRoleInfo
                 {
-                    RoleId = roleCount.RoleId.ToString(),
+                    RoleName = roleCount.RoleName.ToString(),
                     RoleCount = roleCount.RoleCount
                 });
 
@@ -70,8 +71,25 @@ namespace JOC6BK_HFT_2023242.Logic
         }
         public class MostPlayedRoleInfo
         {
-            public string RoleId { get; set; }
+            public string RoleName { get; set; }
             public int RoleCount { get; set; }
+            public override bool Equals(object obj)
+            {
+                MostPlayedRoleInfo b = obj as MostPlayedRoleInfo;
+                if (b == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return this.RoleName == b.RoleName
+                        && this.RoleCount == b.RoleCount;
+                }
+            }
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(this.RoleName, this.RoleCount);
+            }
         }
     }
 }

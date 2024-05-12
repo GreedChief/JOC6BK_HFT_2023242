@@ -77,7 +77,8 @@ namespace JOC6BK_HFT_2023242.Logic
                           {
                               GameId = b.GameId,
                               Title = b.Title,
-                              Release = b.Release
+                              Release = b.Release,
+                              DeveloperId = b.DeveloperId
                           });            
         }
         public IEnumerable<GameDetail> GetGamesByRelease(DateTime releaseDate)
@@ -88,7 +89,8 @@ namespace JOC6BK_HFT_2023242.Logic
                 {
                     GameId = game.GameId,
                     Title = game.Title,
-                    Release = game.Release
+                    Release = game.Release,
+                    DeveloperId = game.DeveloperId
                 });
         }
         public double? GetHighestRating()
@@ -133,6 +135,26 @@ namespace JOC6BK_HFT_2023242.Logic
             public int GameId { get; set; }
             public string Title { get; set; }
             public DateTime Release { get; set; }
+            public int DeveloperId { get; set; }
+            public override bool Equals(object obj)
+            {
+                GameDetail b = obj as GameDetail;
+                if (b == null)
+                {
+                    return false;
+                }
+                else
+                {
+                    return this.GameId == b.GameId
+                        && this.Title == b.Title
+                        && this.Release == b.Release
+                        && this.DeveloperId == b.DeveloperId;
+                }
+            }
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(this.GameId, this.Title, this.Release, this.DeveloperId);
+            }
         }
     }
 

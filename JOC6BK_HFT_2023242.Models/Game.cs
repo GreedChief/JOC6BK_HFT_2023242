@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
 namespace JOC6BK_HFT_2023242.Models
@@ -28,7 +29,8 @@ namespace JOC6BK_HFT_2023242.Models
         public int DeveloperId { get; set; }
 
         public virtual Developer Developer { get; set; }
-
+        
+        [JsonIgnore]
         public virtual ICollection<Player> Players { get; set; }
 
         public virtual ICollection<Role> Roles { get; set; }
