@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
-using static JOC6BK_HFT_2023242.Logic.GameLogic;
 
 namespace JOC6BK_HFT_2023242.Endpoint.Controllers
 {
@@ -12,6 +11,7 @@ namespace JOC6BK_HFT_2023242.Endpoint.Controllers
     {
         IGameLogic logic;
         IPlayerLogic playerLogic;
+        IRoleLogic roleLogic;
 
         public StatController(IGameLogic logic)
         {
@@ -47,5 +47,12 @@ namespace JOC6BK_HFT_2023242.Endpoint.Controllers
         { 
             return this.playerLogic.GetPlayerById(id);
         }
+
+        [HttpGet]
+        IEnumerable<RoleLogic.MostPlayedRoleInfo> GetMostPlayedRole() 
+        { 
+            return this.roleLogic.GetMostPlayedRole();
+        }
+
     }
 }
