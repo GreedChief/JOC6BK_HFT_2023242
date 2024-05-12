@@ -51,7 +51,7 @@ namespace JOC6BK_HFT_2023242.Endpoint.Controllers
         }
 
         [HttpGet]
-        IEnumerable<RoleLogic.RoleInfo> GetMostPlayedRole() 
+        public IEnumerable<RoleLogic.RoleInfo> GetMostPlayedRole() 
         { 
             return this.roleLogic.GetMostPlayedRole();
         }
