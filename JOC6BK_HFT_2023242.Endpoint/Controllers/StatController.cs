@@ -1,41 +1,30 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using JOC6BK_HFT_2023242.Logic;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 
 namespace JOC6BK_HFT_2023242.Endpoint.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("[controller]/[action]")]
     [ApiController]
     public class StatController : ControllerBase
     {
-        // GET: api/<StatController>
+        IGameLogic logic;
+
+        public StatController(IGameLogic logic)
+        {
+            this.logic = logic;
+        }
+
+        [HttpGet("{year}")]
+        public double? AverageRatePerYear(int year)
+        {
+            return this.logic.GetAverageRatePerYear(year);
+        }
+
         [HttpGet]
-        public IEnumerable<string> Get()
+        public IEnumerable<GameLogic.YearInfo> YearStatistics(int year)
         {
-            return new string[] { "value1", "value2" };
-        }
-
-        // GET api/<StatController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
-        // POST api/<StatController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
-        }
-
-        // PUT api/<StatController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
-        {
-        }
-
-        // DELETE api/<StatController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+            return this.logic.YearStatistics();
         }
     }
 }
