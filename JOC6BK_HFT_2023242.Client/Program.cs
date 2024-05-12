@@ -193,10 +193,11 @@ namespace JOC6BK_HFT_2023242.Client
                 .Add("Exit", ConsoleMenu.Close);
 
             var noncrudsSubMenu = new ConsoleMenu(args, level: 1)
-                .Add("List", () => List("NonCrud"))
-                .Add("Create", () => Create("NonCrud"))
-                .Add("Delete", () => Delete("NonCrud"))
-                .Add("Update", () => Update("NonCrud"))
+                .Add("GetAverageRatePerYear", () => GetAverageRatePerYear("GetAverageRatePerYear"))
+                .Add("YearStatistics", () => YearStatistics("YearStatistics"))
+                .Add("GetGamesByRelease", () => GetGamesByRelease("GetGamesByRelease"))
+                .Add("GetMostPlayedRole", () => GetMostPlayedRole("GetMostPlayedRole"))
+                .Add("GetPlayerById", () => GetPlayerById("GetPlayerById"))
                 .Add("Exit", ConsoleMenu.Close);
 
 
@@ -209,6 +210,31 @@ namespace JOC6BK_HFT_2023242.Client
                 .Add("Exit", ConsoleMenu.Close);
 
             menu.Show();
+        }
+
+        private static void GetPlayerById(string endpoint)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void GetMostPlayedRole(string endpoint)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void GetGamesByRelease(string endpoint)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void YearStatistics(string endpoint)
+        {
+            throw new NotImplementedException();
+        }
+
+        private static void GetAverageRatePerYear(string v)
+        {
+            throw new NotImplementedException();
         }
     }
 }

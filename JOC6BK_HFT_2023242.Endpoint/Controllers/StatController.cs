@@ -13,9 +13,11 @@ namespace JOC6BK_HFT_2023242.Endpoint.Controllers
         IPlayerLogic playerLogic;
         IRoleLogic roleLogic;
 
-        public StatController(IGameLogic logic)
+        public StatController(IGameLogic logic, IPlayerLogic playerLogic, IRoleLogic roleLogic)
         {
             this.logic = logic;
+            this.playerLogic = playerLogic;
+            this.roleLogic = roleLogic;
         }
 
         [HttpGet("{year}")]
