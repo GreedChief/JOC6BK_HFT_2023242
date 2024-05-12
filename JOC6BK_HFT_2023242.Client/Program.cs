@@ -1,62 +1,64 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
+using System.Xml;
 using ConsoleTools;
-using JOC6BK_HFT_2023242.Logic;
 using JOC6BK_HFT_2023242.Models;
-using JOC6BK_HFT_2023242.Repository;
 
 namespace JOC6BK_HFT_2023242.Client
 {
     internal class Program
     {
-        static PlayerLogic playerLogic;
-        static RoleLogic roleLogic;
-        static DeveloperLogic developerLogic;
-        static GameLogic gameLogic;
-
+        static RestService rest;
         static void Create(string entity)
         {
-            Console.WriteLine(entity + " create");
-            Console.ReadLine();
+            if (entity == "Player")
+            {
+                Console.Write("Enter Player Name: ");
+                string name = Console.ReadLine();
+                rest.Post(new Player() { PlayerName = name }, "player");
+            }
         }
         static void List(string entity)
         {
             if (entity == "Player")
             {
-                var items = playerLogic.ReadAll();
-                Console.WriteLine("Id" + "\t" + "Name");
-                foreach (var item in items)
+                List<Player> players = rest.Get<Player>("player");
+                foreach (var item in players)
                 {
-                    Console.WriteLine(item.PlayerId + "\t" + item.PlayerName);
+                    Console.WriteLine(item.PlayerId + ": " + item.PlayerName);
                 }
             }
             Console.ReadLine();
         }
         static void Update(string entity)
         {
-            Console.WriteLine(entity + " update");
-            Console.ReadLine();
+            if (entity == "Player")
+            {
+                Console.Write("Enter Player's id to update: ");
+                int id = int.Parse(Console.ReadLine());
+                Player one = rest.Get<Player>(id, "player");
+                Console.Write($"New name [old: {one.PlayerName}]: ");
+                string name = Console.ReadLine();
+                one.PlayerName = name;
+                rest.Put(one, "player");
+            }
         }
         static void Delete(string entity)
         {
-            Console.WriteLine(entity + " delete");
-            Console.ReadLine();
+            if (entity == "Player")
+            {
+                Console.Write("Enter Player's id to delete: ");
+                int id = int.Parse(Console.ReadLine());
+                rest.Delete(id, "player");
+            }
         }
         static void Main(string[] args)
         {
-            var ctx = new GameDbContext();
+            rest = new RestService("http://localhost:28357/", "game");
 
-            var gameRepo = new GameRepository(ctx);
-            var roleRepo = new RoleRepository(ctx);
-            var playerRepo = new PlayerRepository(ctx);
-            var developerRepo = new DeveloperRepository(ctx);
 
-            gameLogic = new GameLogic(gameRepo);
-            roleLogic = new RoleLogic(roleRepo);
-            playerLogic = new PlayerLogic(playerRepo);
-            developerLogic = new DeveloperLogic(developerRepo);
-            
-            
             var playerSubMenu = new ConsoleMenu(args, level: 1)
                .Add("List", () => List("Player"))
                .Add("Create", () => Create("Player"))
