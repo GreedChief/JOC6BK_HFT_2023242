@@ -47,7 +47,7 @@ namespace JOC6BK_HFT_2023242.Logic
         {
             this.repo.Update(item);
         }
-        public IEnumerable<MostPlayedRoleInfo> GetMostPlayedRole()
+        public IEnumerable<RoleInfo> GetMostPlayedRole()
         {
             var roleCounts = repo.ReadAll()
                                 .GroupBy(r => r.RoleName)
@@ -61,7 +61,7 @@ namespace JOC6BK_HFT_2023242.Logic
                                 .ToList();
 
             var mostMostPlayedRole = roleCounts.Select(roleCount =>
-                new MostPlayedRoleInfo
+                new RoleInfo
                 {
                     RoleName = roleCount.RoleName.ToString(),
                     RoleCount = roleCount.RoleCount
@@ -69,13 +69,13 @@ namespace JOC6BK_HFT_2023242.Logic
 
             return mostMostPlayedRole.Take(1);
         }
-        public class MostPlayedRoleInfo
+        public class RoleInfo
         {
             public string RoleName { get; set; }
             public int RoleCount { get; set; }
             public override bool Equals(object obj)
             {
-                MostPlayedRoleInfo b = obj as MostPlayedRoleInfo;
+                RoleInfo b = obj as RoleInfo;
                 if (b == null)
                 {
                     return false;

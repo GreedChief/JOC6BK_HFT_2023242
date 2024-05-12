@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\JOC6BK_HFT_2023242.Logic\JOC6BK_HFT_2023242.Logic.csproj" />
     <ProjectReference Include="..\JOC6BK_HFT_2023242.Models\JOC6BK_HFT_2023242.Models.csproj" />
   </ItemGroup>
 

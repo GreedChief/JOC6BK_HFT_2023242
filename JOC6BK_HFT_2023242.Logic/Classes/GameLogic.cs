@@ -109,7 +109,6 @@ namespace JOC6BK_HFT_2023242.Logic
             public int Year { get; set; }
             public double? AvgRating { get; set; }
             public int GameNumber { get; set; }
-            public int RoleNumber { get; set; }
 
             public override bool Equals(object obj)
             {

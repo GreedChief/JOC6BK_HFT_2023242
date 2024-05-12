@@ -5,6 +5,8 @@ using System.Net.Http;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using JOC6BK_HFT_2023242.Logic;
+using JOC6BK_HFT_2023242.Models;
 
 namespace JOC6BK_HFT_2023242.Client
 {
@@ -143,7 +145,6 @@ namespace JOC6BK_HFT_2023242.Client
 
             response.EnsureSuccessStatusCode();
         }
-
     }
     public class RestExceptionInfo
     {

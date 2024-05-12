@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Numerics;
 using System.Xml;
 using ConsoleTools;
+using JOC6BK_HFT_2023242.Logic;
 using JOC6BK_HFT_2023242.Models;
+using static JOC6BK_HFT_2023242.Logic.GameLogic;
+using static JOC6BK_HFT_2023242.Logic.RoleLogic;
 
 namespace JOC6BK_HFT_2023242.Client
 {
@@ -75,7 +79,7 @@ namespace JOC6BK_HFT_2023242.Client
                 List<Game> games = rest.Get<Game>("game");
                 foreach (var item in games)
                 {
-                    Console.WriteLine(item.GameId + ": " + item.Title);
+                    Console.WriteLine(item.GameId + ": " + item.Title + " Release Date:" + item.Release.ToShortDateString());
                 }
             }
 
@@ -193,7 +197,7 @@ namespace JOC6BK_HFT_2023242.Client
                 .Add("Exit", ConsoleMenu.Close);
 
             var noncrudsSubMenu = new ConsoleMenu(args, level: 1)
-                .Add("GetAverageRatePerYear", () => GetAverageRatePerYear("GetAverageRatePerYear"))
+                .Add("GetGamesByDeveloper", () => GetGamesByDeveloper("GetGamesByDeveloper"))
                 .Add("YearStatistics", () => YearStatistics("YearStatistics"))
                 .Add("GetGamesByRelease", () => GetGamesByRelease("GetGamesByRelease"))
                 .Add("GetMostPlayedRole", () => GetMostPlayedRole("GetMostPlayedRole"))
@@ -212,29 +216,61 @@ namespace JOC6BK_HFT_2023242.Client
             menu.Show();
         }
 
+        private static void GetGamesByDeveloper(string endpoint)
+        {
+            Console.Write("Enter the searched developer's ID: ");
+            int authorId = int.Parse(Console.ReadLine());
+            var result = rest.Get<dynamic>($"Stat/{endpoint}/{authorId}");
+
+            foreach (var item in result)
+            {
+                Console.WriteLine(item.ToString());
+            }
+            Console.ReadLine();
+        }
+    
+
         private static void GetPlayerById(string endpoint)
         {
-            throw new NotImplementedException();
+            Console.Write("Enter the searched player's ID: ");
+            int playerId = int.Parse(Console.ReadLine());
+            Player result = rest.Get<Player>(playerId, "player");
+            Console.WriteLine($"The searched player's name: {result.PlayerName}");
+            Console.ReadLine();
         }
 
-        private static void GetMostPlayedRole(string endpoint)
+        private static void GetMostPlayedRole(string endpoint) // hiba
         {
-            throw new NotImplementedException();
+            var result = rest.Get<RoleInfo>($"Stat/{endpoint}");
+
+            foreach (var item in result)
+            {
+                Console.WriteLine($"Role Name: {item.RoleName} | Role Count: {item.RoleCount}");
+            }
+            Console.ReadLine();
         }
 
-        private static void GetGamesByRelease(string endpoint)
+        private static void GetGamesByRelease(string endpoint) 
         {
-            throw new NotImplementedException();
+            Console.Write("Enter the release date(yyyy.MM.dd): ");
+            DateTime release = DateTime.Parse(Console.ReadLine());
+            var result = rest.Get<GameDetail>($"Stat/{endpoint}/{release}");
+            foreach (var item in result)
+            {
+                Console.WriteLine($"GameId: {item.GameId} |  Title: {item.Title} | Release: {item.Release} | DeveloperId: {item.DeveloperId}");
+            }        
+            Console.ReadLine();
         }
 
         private static void YearStatistics(string endpoint)
         {
-            throw new NotImplementedException();
-        }
+            var result = rest.Get<YearInfo>($"Stat/{endpoint}");
 
-        private static void GetAverageRatePerYear(string v)
-        {
-            throw new NotImplementedException();
+            foreach (var item in result)
+            {
+                Console.WriteLine($"Year: {item.Year} | AvgRating: {Math.Round((decimal)item.AvgRating, 2)} | GameNumber: {item.GameNumber}");
+            }
+            Console.ReadLine();
         }
     }
 }
