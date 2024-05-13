@@ -11,6 +11,5 @@ namespace JOC6BK_HFT_2023242.Logic
         Player Read(int id);
         IQueryable<Player> ReadAll();
         void Update(Player item);
-        IEnumerable<PlayerLogic.PlayerInfo> GetPlayerById(int id);
     }
 }

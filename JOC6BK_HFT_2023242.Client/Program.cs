@@ -7,8 +7,7 @@ using System.Xml;
 using ConsoleTools;
 using JOC6BK_HFT_2023242.Logic;
 using JOC6BK_HFT_2023242.Models;
-using static JOC6BK_HFT_2023242.Logic.GameLogic;
-using static JOC6BK_HFT_2023242.Logic.RoleLogic;
+using JOC6BK_HFT_2023242.Models.HelpClasses;
 
 namespace JOC6BK_HFT_2023242.Client
 {
@@ -79,7 +78,7 @@ namespace JOC6BK_HFT_2023242.Client
                 List<Game> games = rest.Get<Game>("game");
                 foreach (var item in games)
                 {
-                    Console.WriteLine(item.GameId + ": " + item.Title + " Release Date:" + item.Release.ToShortDateString());
+                    Console.WriteLine(item.GameId + ": " + item.Title + " Release Date:" + item.Release.ToShortDateString() + " DeveloperId: " + item.DeveloperId);
                 }
             }
 
@@ -198,10 +197,12 @@ namespace JOC6BK_HFT_2023242.Client
 
             var noncrudsSubMenu = new ConsoleMenu(args, level: 1)
                 .Add("GetGamesByDeveloper", () => GetGamesByDeveloper("GetGamesByDeveloper"))
+                .Add("GetPlayersByGame", () => GetPlayersByGame("GetPlayersByGame"))
+                .Add("GetRolesByGame", () => GetRolesByGame("GetRolesByGame"))
+                .Add("GetGamesByPlayer", () => GetGamesByPlayer("GetGamesByPlayer"))
+                .Add("GetRolesByPlayer", () => GetRolesByPlayer("GetRolesByPlayer"))
                 .Add("YearStatistics", () => YearStatistics("YearStatistics"))
                 .Add("GetGamesByRelease", () => GetGamesByRelease("GetGamesByRelease"))
-                .Add("GetMostPlayedRole", () => GetMostPlayedRole("GetMostPlayedRole"))
-                .Add("GetPlayerById", () => GetPlayerById("GetPlayerById"))
                 .Add("Exit", ConsoleMenu.Close);
 
 
@@ -216,45 +217,78 @@ namespace JOC6BK_HFT_2023242.Client
             menu.Show();
         }
 
-        private static void GetGamesByDeveloper(string endpoint)
-        {
-            Console.Write("Enter the searched developer's ID: ");
-            int authorId = int.Parse(Console.ReadLine());
-            var result = rest.Get<dynamic>($"Stat/{endpoint}/{authorId}");
-
-            foreach (var item in result)
-            {
-                Console.WriteLine(item.ToString());
-            }
-            Console.ReadLine();
-        }
-    
-
-        private static void GetPlayerById(string endpoint)
+        //tobb tablas noncrud
+        private static void GetRolesByPlayer(string endpoint)
         {
             Console.Write("Enter the searched player's ID: ");
             int playerId = int.Parse(Console.ReadLine());
-            Player result = rest.Get<Player>(playerId, "player");
-            Console.WriteLine($"The searched player's name: {result.PlayerName}");
-            Console.ReadLine();
-        }
-
-        private static void GetMostPlayedRole(string endpoint) // hiba
-        {
-            var result = rest.Get<RoleInfo>($"Stat/{endpoint}");
+            var result = rest.Get<RoleInfo>($"Stat/{endpoint}/{playerId}");
 
             foreach (var item in result)
             {
-                Console.WriteLine($"Role Name: {item.RoleName} | Role Count: {item.RoleCount}");
+                Console.WriteLine($"RoleId: {item.RoleId} | RoleName: {item.RoleName}");
             }
             Console.ReadLine();
         }
 
+        private static void GetGamesByPlayer(string endpoint)
+        {
+            Console.Write("Enter the searched player's ID: ");
+            int playerId = int.Parse(Console.ReadLine());
+            var result = rest.Get<GameInfo>($"Stat/{endpoint}/{playerId}");
+
+            foreach (var item in result)
+            {
+                Console.WriteLine($"GameId: {item.GameId} |  Title: {item.Title} | Release: {item.Release} | DeveloperId: {item.DeveloperId}");
+            }
+            Console.ReadLine();
+        }
+
+        private static void GetRolesByGame(string endpoint)
+        {
+            Console.Write("Enter the searched Game's ID: ");
+            int gameId = int.Parse(Console.ReadLine());
+            var result = rest.Get<RoleInfo>($"Stat/{endpoint}/{gameId}");
+
+            foreach (var item in result)
+            {
+                Console.WriteLine($"RoleId: {item.RoleId} | RoleName: {item.RoleName}");
+            }
+            Console.ReadLine();
+        }
+
+        private static void GetPlayersByGame(string endpoint)
+        {
+            Console.Write("Enter the searched Game's ID: ");
+            int gameId = int.Parse(Console.ReadLine());
+            var result = rest.Get<PlayerInfo>($"Stat/{endpoint}/{gameId}");
+
+            foreach (var item in result)
+            {
+                Console.WriteLine($"PlayerId: {item.PlayerId} | PlayerName: {item.PlayerName}");
+            }
+            Console.ReadLine();
+        }
+
+        
+        private static void GetGamesByDeveloper(string endpoint)
+        {
+            Console.Write("Enter the searched developer's ID: ");
+            int developerId = int.Parse(Console.ReadLine());
+            var result = rest.Get<GameInfo>($"Stat/{endpoint}/{developerId}");
+
+            foreach (var item in result)
+            {
+                Console.WriteLine($"GameId: {item.GameId} |  Title: {item.Title} | Release: {item.Release} | DeveloperId: {item.DeveloperId}");
+            }
+            Console.ReadLine();
+        }
+        //noncrud
         private static void GetGamesByRelease(string endpoint) 
         {
             Console.Write("Enter the release date(yyyy.MM.dd): ");
             DateTime release = DateTime.Parse(Console.ReadLine());
-            var result = rest.Get<GameDetail>($"Stat/{endpoint}/{release}");
+            var result = rest.Get<GameInfo>($"Stat/{endpoint}/{release}");
             foreach (var item in result)
             {
                 Console.WriteLine($"GameId: {item.GameId} |  Title: {item.Title} | Release: {item.Release} | DeveloperId: {item.DeveloperId}");

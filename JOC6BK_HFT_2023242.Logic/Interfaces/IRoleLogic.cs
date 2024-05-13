@@ -11,7 +11,5 @@ namespace JOC6BK_HFT_2023242.Logic
         Role Read(int id);
         IQueryable<Role> ReadAll();
         void Update(Role item);
-        IEnumerable<RoleLogic.RoleInfo> GetMostPlayedRole();
-
     }
 }

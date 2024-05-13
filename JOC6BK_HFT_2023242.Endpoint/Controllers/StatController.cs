@@ -1,4 +1,6 @@
 ﻿using JOC6BK_HFT_2023242.Logic;
+using JOC6BK_HFT_2023242.Models;
+using JOC6BK_HFT_2023242.Models.HelpClasses;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -10,51 +12,53 @@ namespace JOC6BK_HFT_2023242.Endpoint.Controllers
     public class StatController : ControllerBase
     {
         IGameLogic logic;
-        IPlayerLogic playerLogic;
-        IRoleLogic roleLogic;
 
-        public StatController(IGameLogic logic, IPlayerLogic playerLogic, IRoleLogic roleLogic)
+        public StatController(IGameLogic logic)
         {
             this.logic = logic;
-            this.playerLogic = playerLogic;
-            this.roleLogic = roleLogic;
         }
-
-        [HttpGet("{year}")]
-        public double? AverageRatePerYear(int year)
-        {
-            return this.logic.GetAverageRatePerYear(year);
-        }
-
+        //non cruds
         [HttpGet]
-        public IEnumerable<GameLogic.YearInfo> YearStatistics(int year)
+        public IEnumerable<YearInfo> YearStatistics(int year)
         {
             return this.logic.YearStatistics();
         }
 
+        [HttpGet("{releaseDate}")]
+        public IEnumerable<GameInfo> GetGamesByRelease(DateTime releaseDate)
+        {
+            return this.logic.GetGamesByRelease(releaseDate);
+        }
+
+        //több táblásak
+        [HttpGet("{playerId}")]
+        public IEnumerable<GameInfo> GetGamesByPlayer(int playerId)
+        { 
+            return this.logic.GetGamesByPlayer(playerId);
+        }
+
+        [HttpGet("{gameId}")]
+        public IEnumerable<PlayerInfo> GetPlayersByGame(int gameId)
+        { 
+            return this.logic.GetPlayersByGame(gameId);
+        }
+
         [HttpGet("{developerId}")]
-        public IEnumerable<GameLogic.GameDetail> GetGamesByDeveloper(int developerId) 
+        public IEnumerable<GameInfo> GetGamesByDeveloper(int developerId)
         { 
             return this.logic.GetGamesByDeveloper(developerId);
         }
 
-        [HttpGet("{releaseDate}")]
-        public IEnumerable<GameLogic.GameDetail> GetGamesByRelease(DateTime releaseDate) 
-        { 
-            return this.logic.GetGamesByRelease(releaseDate);
+        [HttpGet("{playerId}")]
+        public IEnumerable<RoleInfo> GetRolesByPlayer(int playerId) 
+        {
+            return this.logic.GetRolesByPlayer(playerId);
         }
 
-        [HttpGet("{id}")]
-        public IEnumerable<PlayerLogic.PlayerInfo> GetPlayerById(int id) 
-        { 
-            return this.playerLogic.GetPlayerById(id);
+        [HttpGet("{gameId}")]
+        public IEnumerable<RoleInfo> GetRolesByGame(int gameId) 
+        {
+            return this.logic.GetRolesByGame(gameId);
         }
-
-        [HttpGet]
-        public IEnumerable<RoleLogic.RoleInfo> GetMostPlayedRole() 
-        { 
-            return this.roleLogic.GetMostPlayedRole();
-        }
-
     }
 }

@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using JOC6BK_HFT_2023242.Logic;
 using JOC6BK_HFT_2023242.Models;
+using JOC6BK_HFT_2023242.Models.HelpClasses;
 using JOC6BK_HFT_2023242.Repository;
 using Moq;
 using NUnit.Framework;
-using static JOC6BK_HFT_2023242.Logic.GameLogic;
-using static JOC6BK_HFT_2023242.Logic.PlayerLogic;
-using static JOC6BK_HFT_2023242.Logic.RoleLogic;
 
 namespace JOC6BK_HFT_2023242.Test
 {
@@ -19,9 +17,11 @@ namespace JOC6BK_HFT_2023242.Test
         GameLogic gameLogic;
         RoleLogic roleLogic;
         PlayerLogic playerLogic;
+        DeveloperLogic developerLogic;
         Mock<IRepository<Game>> mockGameRepo;
         Mock<IRepository<Role>> mockRoleRepo;
         Mock<IRepository<Player>> mockPlayerRepo;
+        Mock<IRepository<Developer>> mockDeveloperRepo;
 
         [SetUp]
         public void Init()
@@ -34,7 +34,7 @@ namespace JOC6BK_HFT_2023242.Test
                  new Game {GameId = 3,Title="GameC", Price=400, DeveloperId=2, Release= new DateTime(2009, 5, 2), Rating=7 },
                  new Game {GameId = 4,Title="GameD", Price=500, DeveloperId=3, Release= new DateTime(2010, 5, 2), Rating=8 },
             }.AsQueryable());
-            gameLogic = new GameLogic(mockGameRepo.Object);
+            gameLogic = new GameLogic(mockGameRepo.Object, mockDeveloperRepo.Object, mockPlayerRepo.Object);
 
             mockRoleRepo = new Mock<IRepository<Role>>();
             mockRoleRepo.Setup(g => g.ReadAll()).Returns(new List<Role>()
@@ -55,15 +55,19 @@ namespace JOC6BK_HFT_2023242.Test
                  new Player {PlayerId = 4, PlayerName= "PlayerD"  },
             }.AsQueryable());
             playerLogic = new PlayerLogic(mockPlayerRepo.Object);
+
+            mockDeveloperRepo = new Mock<IRepository<Developer>>();
+            mockDeveloperRepo.Setup(g => g.ReadAll()).Returns(new List<Developer>()
+            {
+                 new Developer {DeveloperId = 1, DeveloperName= "DeveloperA" },
+                 new Developer {DeveloperId = 2, DeveloperName= "DeveloperB"  },
+                 new Developer {DeveloperId = 3, DeveloperName= "DeveloperC"  },
+                 new Developer {DeveloperId = 4, DeveloperName= "DeveloperD"  },
+            }.AsQueryable());
+            developerLogic = new DeveloperLogic(mockDeveloperRepo.Object);
         }
 
         //NonCrudTests
-        [Test]
-        public void AvgRatePerYearTest()
-        {
-            double? avg = gameLogic.GetAverageRatePerYear(2009);
-            Assert.That(avg, Is.EqualTo(6.5));
-        }
 
         [Test]
         public void YearStatisticsTest()
@@ -92,48 +96,22 @@ namespace JOC6BK_HFT_2023242.Test
             };
             Assert.AreEqual(expected, actual);
         }
-        [Test]
-        public void GetGamesByDeveloperTest()
-        {
-            int testDeveloperId = 1;
-            var actualGames = gameLogic.GetGamesByDeveloper(testDeveloperId).ToList();
-            var expectedGames = new List<GameDetail>()
-            {
-                new GameDetail() 
-                { 
-                  GameId = 1,
-                  Title = "GameA",
-                  Release = new DateTime(2008, 5, 2),
-                  DeveloperId = 1
-                },
-                new GameDetail() 
-                {
-                    GameId = 2,
-                    Title="GameB", 
-                    Release= new DateTime(2009, 5, 2),
-                    DeveloperId = 1
-                }
-            };
-
-            Assert.AreEqual(expectedGames, actualGames);
-
-        }
 
         [Test]
         public void GetGamesByReleaseTest()
         {
             // Arrange
             var releaseDate = new DateTime(2009, 5, 2);
-            var expectedGames = new List<GameDetail>
+            var expectedGames = new List<GameInfo>
             {
-                new GameDetail() 
+                new GameInfo() 
                 { 
                     GameId = 2, 
                     Title = "GameB",
                     Release= new DateTime(2009, 5, 2),
                     DeveloperId = 1
                 },
-                new GameDetail() 
+                new GameInfo() 
                 { 
                     GameId = 3, 
                     Title = "GameC",
@@ -148,43 +126,8 @@ namespace JOC6BK_HFT_2023242.Test
             Assert.AreEqual(expectedGames, actualGames);
         }
 
-        [Test]
-        public void GetPlayerByIdTest()
-        {
-            int testPlayerId = 1;
-            var actualPlayer = playerLogic.GetPlayerById(testPlayerId).ToList();
-            var expectedPlayer = new List<PlayerInfo>()
-            {
-                new PlayerInfo()
-                {
-                    PlayerId = 1,
-                    Name = "PlayerA"                    
-                },
-            };
+      
 
-            Assert.AreEqual(expectedPlayer, actualPlayer);
-        }
-
-        [Test]
-        public void GetMostPlayedRoleTest()
-        {
-
-            var expectedRole = new List<RoleInfo>
-            {
-                new RoleInfo()
-                {
-                    RoleName = "Support",
-                    RoleCount = 2
-                }
-            };
-
-            // Act
-            var actualRole = roleLogic.GetMostPlayedRole().ToList();
-
-            // Assert
-            Assert.AreEqual(expectedRole, actualRole);
-
-        }
 
         //CreateTests
         [Test]

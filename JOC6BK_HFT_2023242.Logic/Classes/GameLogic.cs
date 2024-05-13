@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using JOC6BK_HFT_2023242.Models;
+using JOC6BK_HFT_2023242.Models.HelpClasses;
 using JOC6BK_HFT_2023242.Repository;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion.Internal;
 
@@ -11,10 +12,14 @@ namespace JOC6BK_HFT_2023242.Logic
     public class GameLogic : IGameLogic
     {
         IRepository<Game> repo;
+        IRepository<Developer> developerRepo;
+        IRepository<Player> playerRepo;
 
-        public GameLogic(IRepository<Game> repo)
+        public GameLogic(IRepository<Game> repo, IRepository<Developer> developerRepo, IRepository<Player> playerRepo)
         {
             this.repo = repo;
+            this.developerRepo = developerRepo;
+            this.playerRepo = playerRepo;
         }
 
         public void Create(Game item)
@@ -51,12 +56,7 @@ namespace JOC6BK_HFT_2023242.Logic
             this.repo.Update(item);
         }
 
-        //Non Cruds (min5, több táblás lekérdezést kell készíteni)
-        public double? GetAverageRatePerYear(int year)
-        {
-            return this.repo.ReadAll().Where(t => t.Release.Year == year)
-                .Average(t => t.Rating);
-        }
+        //Non Cruds 
         public IEnumerable<YearInfo> YearStatistics()
         {
             return from x in this.repo.ReadAll()
@@ -69,23 +69,11 @@ namespace JOC6BK_HFT_2023242.Logic
                    };
         }
 
-        public IEnumerable<GameDetail> GetGamesByDeveloper(int developerId)
-        {
-                return this.repo.ReadAll()
-                          .Where(b => b.DeveloperId == developerId)
-                          .Select(b => new GameDetail
-                          {
-                              GameId = b.GameId,
-                              Title = b.Title,
-                              Release = b.Release,
-                              DeveloperId = b.DeveloperId
-                          });            
-        }
-        public IEnumerable<GameDetail> GetGamesByRelease(DateTime releaseDate)
+        public IEnumerable<GameInfo> GetGamesByRelease(DateTime releaseDate)
         {
             return this.repo.ReadAll()
                 .Where(game => game.Release.Date == releaseDate.Date)
-                .Select(game => new GameDetail
+                .Select(game => new GameInfo
                 {
                     GameId = game.GameId,
                     Title = game.Title,
@@ -93,68 +81,77 @@ namespace JOC6BK_HFT_2023242.Logic
                     DeveloperId = game.DeveloperId
                 });
         }
-        public double? GetHighestRating()
+        //Több táblás non-crud lekérdezések
+        public IEnumerable<GameInfo> GetGamesByPlayer(int playerId)
         {
-            return this.repo.ReadAll()
-                .Max(t => (double?)t.Rating);
+            return (from player in playerRepo.ReadAll()
+                    where player.PlayerId == playerId
+                    from game in player.Games
+                    select new GameInfo
+                    {
+                        GameId = game.GameId,
+                        Title = game.Title,
+                        Price = game.Price,
+                        Rating = game.Rating,
+                        Release = game.Release,
+                        DeveloperId = game.DeveloperId
+                    }).Distinct();
         }
 
-        public void Create(Role newRole)
+        public IEnumerable<PlayerInfo> GetPlayersByGame(int gameId)
         {
-            throw new NotImplementedException();
+            return (from game in repo.ReadAll()
+                    where game.GameId == gameId
+                    from player in game.Players
+                    select new PlayerInfo
+                    {
+                        PlayerId = player.PlayerId,
+                        PlayerName = player.PlayerName
+                    });
         }
 
-        public class YearInfo
+        public IEnumerable<GameInfo> GetGamesByDeveloper(int developerId)
         {
-            public int Year { get; set; }
-            public double? AvgRating { get; set; }
-            public int GameNumber { get; set; }
+            return (from developer in developerRepo.ReadAll()
+                    where developer.DeveloperId == developerId
+                    from game in developer.Games
+                    select new GameInfo
+                    {
+                        GameId = game.GameId,
+                        Title = game.Title,
+                        Price = game.Price,
+                        Rating = game.Rating,
+                        Release = game.Release,
+                        DeveloperId = game.DeveloperId
+                    }).Distinct();
+        }
 
-            public override bool Equals(object obj)
-            {
-               YearInfo b = obj as YearInfo;
-                if (b == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return this.Year == b.Year
-                        && this.AvgRating == b.AvgRating
-                        && this.GameNumber == b.GameNumber;
-                }
-            }
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(this.Year, this.AvgRating, this.GameNumber);
-            }
+        public IEnumerable<RoleInfo> GetRolesByPlayer(int playerId)
+        {
+            return (from player in playerRepo.ReadAll()
+                    where player.PlayerId == playerId
+                    from role in player.Roles
+                    select new RoleInfo
+                    {
+                        RoleId = role.RoleId,
+                        Priority = role.Priority,
+                        RoleName = role.RoleName
+                    }).Distinct();
         }
-        public class GameDetail 
-        { 
-            public int GameId { get; set; }
-            public string Title { get; set; }
-            public DateTime Release { get; set; }
-            public int DeveloperId { get; set; }
-            public override bool Equals(object obj)
-            {
-                GameDetail b = obj as GameDetail;
-                if (b == null)
-                {
-                    return false;
-                }
-                else
-                {
-                    return this.GameId == b.GameId
-                        && this.Title == b.Title
-                        && this.Release == b.Release
-                        && this.DeveloperId == b.DeveloperId;
-                }
-            }
-            public override int GetHashCode()
-            {
-                return HashCode.Combine(this.GameId, this.Title, this.Release, this.DeveloperId);
-            }
+
+        public IEnumerable<RoleInfo> GetRolesByGame(int gameId)
+        {
+            return (from game in repo.ReadAll()
+                    where game.GameId == gameId
+                    from role in game.Roles
+                    select new RoleInfo
+                    {
+                        RoleId = role.RoleId,
+                        Priority = role.Priority,
+                        RoleName = role.RoleName
+                    }).Distinct();
         }
+
     }
 
 }
