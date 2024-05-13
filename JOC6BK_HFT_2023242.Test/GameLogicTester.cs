@@ -29,12 +29,12 @@ namespace JOC6BK_HFT_2023242.Test
             mockGameRepo = new Mock<IRepository<Game>>();
             mockGameRepo.Setup(g => g.ReadAll()).Returns(new List<Game>()
             {
-                 new Game {GameId = 1,Title="GameA", Price=200, DeveloperId=1, Release= new DateTime(2008, 5, 2), Rating=5 },
-                 new Game {GameId = 2,Title="GameB", Price=300, DeveloperId=1, Release= new DateTime(2009, 5, 2), Rating=6 },
-                 new Game {GameId = 3,Title="GameC", Price=400, DeveloperId=2, Release= new DateTime(2009, 5, 2), Rating=7 },
-                 new Game {GameId = 4,Title="GameD", Price=500, DeveloperId=3, Release= new DateTime(2010, 5, 2), Rating=8 },
+                 new Game {GameId = 1,Title="GameA", Price=200, Rating=5, Release= new DateTime(2008, 5, 2),  DeveloperId=1},
+                 new Game {GameId = 2,Title="GameB", Price=300, Rating=6, Release= new DateTime(2009, 5, 2),  DeveloperId=1},
+                 new Game {GameId = 3,Title="GameC", Price=400, Rating=7, Release= new DateTime(2009, 5, 2), DeveloperId=2},
+                 new Game {GameId = 4,Title="GameD", Price=500, Rating=8, Release= new DateTime(2010, 5, 2),  DeveloperId=3},
             }.AsQueryable());
-            gameLogic = new GameLogic(mockGameRepo.Object, mockDeveloperRepo.Object, mockPlayerRepo.Object);
+          
 
             mockRoleRepo = new Mock<IRepository<Role>>();
             mockRoleRepo.Setup(g => g.ReadAll()).Returns(new List<Role>()
@@ -44,7 +44,7 @@ namespace JOC6BK_HFT_2023242.Test
                 new Role { RoleId = 3, Priority=6, RoleName= "Tank", GameId= 3, PlayerId=3 },
                 new Role { RoleId = 4, Priority=3, RoleName= "Support", GameId= 4, PlayerId=4 },
             }.AsQueryable());
-            roleLogic = new RoleLogic(mockRoleRepo.Object);
+            
 
             mockPlayerRepo = new Mock<IRepository<Player>>();
             mockPlayerRepo.Setup(g => g.ReadAll()).Returns(new List<Player>()
@@ -54,7 +54,7 @@ namespace JOC6BK_HFT_2023242.Test
                  new Player {PlayerId = 3, PlayerName= "PlayerC"  },
                  new Player {PlayerId = 4, PlayerName= "PlayerD"  },
             }.AsQueryable());
-            playerLogic = new PlayerLogic(mockPlayerRepo.Object);
+            
 
             mockDeveloperRepo = new Mock<IRepository<Developer>>();
             mockDeveloperRepo.Setup(g => g.ReadAll()).Returns(new List<Developer>()
@@ -64,6 +64,10 @@ namespace JOC6BK_HFT_2023242.Test
                  new Developer {DeveloperId = 3, DeveloperName= "DeveloperC"  },
                  new Developer {DeveloperId = 4, DeveloperName= "DeveloperD"  },
             }.AsQueryable());
+
+            gameLogic = new GameLogic(mockGameRepo.Object, mockDeveloperRepo.Object, mockPlayerRepo.Object);
+            roleLogic = new RoleLogic(mockRoleRepo.Object);
+            playerLogic = new PlayerLogic(mockPlayerRepo.Object);
             developerLogic = new DeveloperLogic(mockDeveloperRepo.Object);
         }
 
@@ -72,29 +76,20 @@ namespace JOC6BK_HFT_2023242.Test
         [Test]
         public void YearStatisticsTest()
         {
-            var actual = gameLogic.YearStatistics().ToList();
-            var expected = new List<YearInfo>()
+            // Arrange
+            var expectedStatistics = new List<YearInfo>()
             {
-                new YearInfo()
-                {
-                    Year = 2008,
-                    AvgRating = 5,
-                    GameNumber = 1
-                },
-                new YearInfo()
-                {
-                    Year = 2009,
-                    AvgRating = 6.5,
-                    GameNumber= 2
-                },
-                new YearInfo()
-                {
-                    Year = 2010,
-                    AvgRating= 8,
-                    GameNumber= 1
-                }
+                new YearInfo { Year = 2008, AvgRating = 5, GameNumber = 1 },
+                new YearInfo { Year = 2009, AvgRating = 6.5, GameNumber = 2 },
+                new YearInfo { Year = 2010, AvgRating = 8, GameNumber = 1 }
             };
-            Assert.AreEqual(expected, actual);
+
+            // Act
+            var actualStatistics = gameLogic.YearStatistics().ToList();
+
+            // Assert
+            Assert.AreEqual(expectedStatistics, actualStatistics);
+
         }
 
         [Test]
@@ -102,35 +97,165 @@ namespace JOC6BK_HFT_2023242.Test
         {
             // Arrange
             var releaseDate = new DateTime(2009, 5, 2);
+
             var expectedGames = new List<GameInfo>
             {
-                new GameInfo() 
-                { 
-                    GameId = 2, 
+                new GameInfo
+                {
+                    GameId = 2,
                     Title = "GameB",
-                    Release= new DateTime(2009, 5, 2),
+                    Release = new DateTime(2009, 5, 2),
                     DeveloperId = 1
                 },
-                new GameInfo() 
-                { 
-                    GameId = 3, 
+                new GameInfo
+                {
+                    GameId = 3,
                     Title = "GameC",
-                    Release= new DateTime(2009, 5, 2),
-                    DeveloperId = 2 
+                    Release = new DateTime(2009, 5, 2),
+                    DeveloperId = 2
                 }
             };
 
             // Act
             var actualGames = gameLogic.GetGamesByRelease(releaseDate).ToList();
+
             // Assert
             Assert.AreEqual(expectedGames, actualGames);
         }
 
-      
-
-
-        //CreateTests
         [Test]
+        public void GetGamesByPlayerTest()
+        {
+            int playerIdToTest = 1;
+            var expectedGames = new List<GameInfo>()
+            {
+                new GameInfo { GameId = 1, Title = "GameA", Price = 200, Rating = 5, Release = new DateTime(2008, 5, 2), DeveloperId = 1 },
+
+            };
+
+
+            mockPlayerRepo.Setup(p => p.ReadAll()).Returns(new List<Player>()
+            {
+                new Player { PlayerId = 1, PlayerName = "PlayerA", Games = new List<Game>
+                {
+                    new Game { GameId = 1, Title = "GameA", Price = 200, Rating = 5, Release = new DateTime(2008, 5, 2), DeveloperId = 1 }
+
+            }   },
+            }.AsQueryable());
+
+            // Act
+            var result = gameLogic.GetGamesByPlayer(playerIdToTest);
+
+            // Assert
+            Assert.AreEqual(expectedGames, result);
+        }
+        [Test]
+        public void GetPlayersByGameTest()
+        {
+            int gameIdToTest = 1; 
+            var expectedPlayers = new List<PlayerInfo>()
+            {
+                new PlayerInfo { PlayerId = 1, PlayerName = "PlayerA" },
+            };
+
+            mockGameRepo.Setup(g => g.ReadAll()).Returns(new List<Game>()
+            {
+                new Game 
+                {GameId = 1,Title="GameA", Price=200, Rating=5, Release= new DateTime(2008, 5, 2),  DeveloperId=1, 
+                Players = new List<Player>
+                {
+                    new Player {PlayerId = 1, PlayerName= "PlayerA" }
+                }},
+            }.AsQueryable());
+
+            // Act
+            var result = gameLogic.GetPlayersByGame(gameIdToTest);
+
+            // Assert
+            Assert.AreEqual(expectedPlayers, result);
+
+        }
+
+        [Test]
+        public void GetGamesByDeveloperTest()
+        {
+            // Arrange
+            int developerIdToTest = 1;
+            var expectedGames = new List<GameInfo>()
+            {
+                new GameInfo { GameId = 1, Title = "GameA", Price = 200, Rating = 5, Release = new DateTime(2008, 5, 2), DeveloperId = 1 },
+                new GameInfo { GameId = 2, Title = "GameB", Price = 300, Rating = 6, Release = new DateTime(2009, 5, 2), DeveloperId = 1 },
+            };
+
+            mockDeveloperRepo.Setup(d => d.ReadAll()).Returns(new List<Developer>()
+            {
+                new Developer { DeveloperId = 1, DeveloperName = "DeveloperA", Games = new List<Game>
+                {
+                    new Game { GameId = 1, Title = "GameA", Price = 200, Rating = 5, Release = new DateTime(2008, 5, 2), DeveloperId = 1 },
+                    new Game { GameId = 2, Title = "GameB", Price = 300, Rating = 6, Release = new DateTime(2009, 5, 2), DeveloperId = 1 }
+                }},
+            }.AsQueryable());
+
+            // Act
+            var result = gameLogic.GetGamesByDeveloper(developerIdToTest);
+
+            // Assert
+            Assert.AreEqual(expectedGames, result);
+        }
+        [Test]
+        public void GetRolesByPlayerTest()
+        {
+            // Arrange
+            int playerIdToTest = 1; 
+            var expectedRoles = new List<RoleInfo>()
+            {
+                new RoleInfo { RoleId = 1, Priority = 5, RoleName = "Support" },       
+            };
+
+            mockPlayerRepo.Setup(p => p.ReadAll()).Returns(new List<Player>()
+            {
+                new Player { PlayerId = 1, PlayerName = "PlayerA", Roles = new List<Role>
+                {
+                    new Role { RoleId = 1, Priority = 5, RoleName = "Support" }
+                }},
+            }.AsQueryable());
+
+            // Act
+            var result = gameLogic.GetRolesByPlayer(playerIdToTest);
+
+            // Assert
+            Assert.AreEqual(expectedRoles, result);
+ 
+        }
+
+        [Test]
+        public void GetRolesByGameTest()
+        {
+            // Arrange
+            int gameIdToTest = 1; 
+            var expectedRoles = new List<RoleInfo>()
+            {
+                new RoleInfo { RoleId = 1, Priority = 5, RoleName = "Support" },
+            };
+            
+            mockGameRepo.Setup(g => g.ReadAll()).Returns(new List<Game>()
+            {
+                new Game { GameId = 1, Title = "GameA", Price = 200, Rating = 5, Release = new DateTime(2008, 5, 2), DeveloperId = 1, Roles = new List<Role>
+                {
+                    new Role { RoleId = 1, Priority = 5, RoleName = "Support" }
+                }},        
+            }.AsQueryable());
+
+            // Act
+            var result = gameLogic.GetRolesByGame(gameIdToTest);
+
+            // Assert
+            Assert.AreEqual(expectedRoles, result);
+        }
+
+
+            //CreateTests
+            [Test]
         public void CreateGameTestWithCorrectTitle()
         {
             var game = new Game() { Title = "ABCD" };

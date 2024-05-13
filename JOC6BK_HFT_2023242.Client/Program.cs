@@ -60,7 +60,7 @@ namespace JOC6BK_HFT_2023242.Client
                 List<Role> roles = rest.Get<Role>("role");
                 foreach (var item in roles)
                 {
-                    Console.WriteLine(item.RoleId + ": " + item.RoleName);
+                    Console.WriteLine(item.RoleId + ": " + item.RoleName + " Priority: " + item.Priority + " GameId: " + item.GameId + " PlayerId: " + item.PlayerId);
                 }
             }
 

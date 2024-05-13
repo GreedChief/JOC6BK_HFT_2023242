@@ -107,7 +107,7 @@ namespace JOC6BK_HFT_2023242.Logic
                     {
                         PlayerId = player.PlayerId,
                         PlayerName = player.PlayerName
-                    });
+                    }).Distinct();
         }
 
         public IEnumerable<GameInfo> GetGamesByDeveloper(int developerId)
