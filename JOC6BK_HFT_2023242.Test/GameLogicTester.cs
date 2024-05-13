@@ -169,9 +169,9 @@ namespace JOC6BK_HFT_2023242.Test
         public void GetMostPlayedRoleTest()
         {
 
-            var expectedRole = new List<MostPlayedRoleInfo>
+            var expectedRole = new List<RoleInfo>
             {
-                new MostPlayedRoleInfo()
+                new RoleInfo()
                 {
                     RoleName = "Support",
                     RoleCount = 2
